@@ -19,6 +19,11 @@ Set new_Track_Range = ActiveSheet.Range("L1:L" & last_row_Event)
 
 Set new_Region_Range = ActiveSheet.Range("K1:K" & last_row_Event)
 
+Set new_Org_Range = ActiveSheet.Range("G1:G" & last_row_Event)
+Set Org_Range = ActiveSheet.Range("F1:F" & last_row_Event)
+
+
+
 
 For Each cell In new_ID_Range:
     
@@ -28,11 +33,25 @@ For Each cell In new_ID_Range:
         Exit Sub
     End If
 Next
+
+
     
-    'If we pass that check then start assigining Tracks and Regions (as long as it's a not available'
+    'If we pass that check then start assigining Tracks and Regions (as long as it's a not available)'
 For Each cell In new_ID_Range:
     ID = ActiveSheet.Cells(cell.Row, 9).Value
     Region_abrv = (Application.Index(Sheets("Crosscheck").Range("C2:C" & Last_Row_Roster), Application.Match(ID, Sheets("Crosscheck").Range("A2:A" & Last_Row_Roster), 0), 1))
+    'Re-run cleaned IDs for correct Org names'
+    Org_check = (Application.Index(Sheets("Crosscheck").Range("B2:B" & Last_Row_Roster), Application.Match(ID, Sheets("Crosscheck").Range("A2:A" & Last_Row_Roster), 0), 1))
+    
+    If ID = "Not Available" Then
+        new_Org_Range.Cells(cell.Row).Value = Org_Range.Cells(cell.Row).Value
+    Else
+        new_Org_Range.Cells(cell.Row).Value = Org_check
+        
+    End If
+    
+    
+    
     If ID <> "Not Available" Then
         new_Region_Range.Cells(cell.Row).Value = Region_abrv
         new_Track_Range.Cells(cell.Row).Value = Left(ID, 2)
